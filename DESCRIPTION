@@ -1,11 +1,17 @@
 Package: fedex
-Title: What the Package Does (One Line, Title Case)
+Title: Access Wildfire Resilience Index Data
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Authors@R: c(person("Emily", "Miller", , "ermiller@ucsb.edu", role = c("aut", "cre")), person("Ixel", "Medrano", , "imedrano@ucsb.edu", role = "aut"), person("Kaiju", "Morquecho", , "kaimorquecho@ucsb.edu", role = "aut"), person("Hylaea", "Miller", , "hylaea@ucsb.edu", role = "aut"))
+Description: Provides access to the Wildfire Resilience Index (WRI) dataset 
+    through cloud-hosted data querying. Allows users to query, subset, and 
+    retrieve high-resolution geospatial layers measuring wildfire resilience 
+    across western U.S. states, British Columbia, and the Yukon.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    terra
