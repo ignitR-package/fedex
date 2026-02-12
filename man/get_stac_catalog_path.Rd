@@ -2,13 +2,27 @@
 % Please edit documentation in R/stac_config.R
 \name{get_stac_catalog_path}
 \alias{get_stac_catalog_path}
-\title{Get the local STAC catalog path}
+\title{Get the STAC catalog path}
 \usage{
 get_stac_catalog_path()
 }
 \value{
-Character path to the STAC catalog
+Character. Full path to the STAC items directory
 }
 \description{
-Get the local STAC catalog path
+Returns the path to the STAC catalog shipped with the fedex package.
+The STAC catalog contains metadata about all available WRI layers.
+}
+\details{
+The STAC catalog is pre-generated and ships with the package in
+inst/extdata/stac/. This function uses system.file() to find the
+installed location.
+}
+\examples{
+# Get the path to the STAC catalog
+stac_path <- get_stac_catalog_path()
+
+# List STAC item files
+list.files(stac_path, pattern = "\\\\.json$")
+
 }
