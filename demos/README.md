@@ -6,7 +6,7 @@ This directory contains demonstration scripts that test and verify Cloud Optimiz
 
 ## Scripts
 
-### [test_cog_streaming_verified.R](test_cog_streaming_verified.R) ✅ **CURRENT DEMO**
+### [test_cog_streaming_verified.R](test_cog_streaming_verified.R) **CURRENT DEMO**
 
 **Purpose:** Comprehensive COG streaming verification with 6 tests
 
@@ -27,11 +27,11 @@ This directory contains demonstration scripts that test and verify Cloud Optimiz
 Rscript demos/test_cog_streaming_verified.R
 ```
 
-**Status:** ✅ All tests passing, uses correct methods
+**Status:** All tests passing, uses correct methods
 
 ---
 
-### [original_test_cog_steaming.R](original_test_cog_steaming.R) 📦 **ARCHIVE**
+### [original_test_cog_steaming.R](original_test_cog_steaming.R) **ARCHIVE**
 
 **Purpose:** Original comprehensive test script with detailed documentation
 
@@ -44,7 +44,7 @@ Rscript demos/test_cog_streaming_verified.R
 
 ---
 
-## The Overview Access Issue 🔍
+## The Overview Access Issue
 
 ### Background
 
@@ -104,8 +104,8 @@ unlink(temp_overview)
 
 | Method | Time | Data Downloaded | Recommended |
 |--------|------|-----------------|-------------|
-| `aggregate()` | ~6 min | ~3.5 GB | ❌ NO |
-| `gdal_translate -outsize` | ~25 sec | ~3-5 MB | ✅ YES |
+| `aggregate()` | ~6 min | ~3.5 GB | NO |
+| `gdal_translate -outsize` | ~25 sec | ~3-5 MB | YES |
 
 **Speedup:** 12× faster
 
@@ -215,9 +215,9 @@ See [../R/retrieve.R](../R/retrieve.R) for implementation details.
 
 ## Summary
 
-✅ **All WRI COGs are properly configured** - 7 overview levels, efficient tiling
-✅ **COG streaming works perfectly** from KNB
-✅ **Use the verified demo** for testing and examples
-✅ **Use `gdal_translate`** for overview access, NOT `aggregate()`
+**All WRI COGs are properly configured** - 7 overview levels, efficient tiling
+**COG streaming works perfectly** from KNB
+**Use the verified demo** for testing and examples
+**Use `gdal_translate`** for overview access, NOT `aggregate()`
 
 The demos prove that users can access WRI data efficiently via HTTP range requests without downloading full files.
