@@ -1,0 +1,133 @@
+---
+title: "fedex Package Demo"
+format: html
+---
+
+# Getting Started 
+
+This demo shows how to explore, query, and retrieve WRI data using the `fedex` package.
+
+```{r setup, message=FALSE}
+# Load the package (development mode)
+# If you've installed the package, use: library(fedex)
+# For development, use:
+devtools::load_all()
+
+# Load terra for plotting
+library(terra)
+
+# Load tictoc for timing retrievals
+library(tictoc)
+```
+
+## Step 1: Explore What's Available
+
+Get an overview of the data catalog:
+
+```{r explore-catalog}
+# Get a summary of the entire catalog
+catalog_summary()
+```
+
+Explore catagories:
+
+```{r explore-categories}
+# What domains exist?
+list_domains()
+
+# What layer types are available?
+list_layer_types()
+
+# What data types are available?
+list_data_types()
+```
+
+Search for specific layers:
+
+```{r search-layers}
+# Find all fire-related layers
+search_layers("fire")
+
+# Find asthma-related layers
+search_layers("asthma")
+```
+
+## Step 2: Query and Filter Layers
+
+Filter to what you want:
+
+```{r query-layers}
+# Get all air quality layers
+air_quality <- list_layers(domain = "air_quality")
+print(air_quality)
+
+# Get all resistance indicators across all domains
+resistance <- list_layers(layer_type = "resistance", data_type = "indicator")
+head(resistance)
+
+# See what's currently hosted on KNB
+hosted <- list_layers(hosted_only = TRUE)
+print(hosted)
+```
+
+## Step 3: Retrieve and Plot Data
+
+### Example 1: Get Full WRI Score Layer (no bbox)
+
+```{r get-layer-full}
+# Get the entire WRI score layer
+# Warning: This is a large file, so it may take a moment
+tic("Full extent retrieval")
+wri_full <- get_layer("WRI_score")
+toc()
+
+# Plot it
+plot(wri_full,
+     main = "WRI Score - Full Extent",
+     col = hcl.colors(100, "YlOrRd", rev = TRUE))
+```
+
+### Example 2: Get WRI Score for Northern California (with bbox)
+
+```{r get-layer-bbox}
+# Define a bounding box for northern California
+# Format: c(xmin, ymin, xmax, ymax) in EPSG:4326 (lon/lat)
+bbox_norcal <- c(-122, 37, -121, 38)
+
+# Retrieve the WRI score for this area
+tic("Northern California bbox retrieval")
+wri_norcal <- get_layer("WRI_score", bbox = bbox_norcal)
+toc()
+
+# Plot it
+plot(wri_norcal,
+     main = "WRI Score - Northern California",
+     col = hcl.colors(100, "YlOrRd", rev = TRUE))
+```
+
+### Example 3: Get WRI Score for Larger Region
+
+```{r get-layer-larger}
+# Define a larger bounding box (Pacific Northwest)
+bbox_pnw <- c(-125, 42, -110, 49)
+
+# Retrieve the WRI score for this larger area
+tic("Pacific Northwest bbox retrieval")
+wri_pnw <- get_layer("WRI_score", bbox = bbox_pnw)
+toc()
+
+# Plot it
+plot(wri_pnw,
+     main = "WRI Score - Pacific Northwest",
+     col = hcl.colors(100, "YlOrRd", rev = TRUE))
+```
+
+## Summary
+
+The `fedex` package provides a simple 3-step workflow:
+
+1. **Explore**: Use `catalog_summary()`, `list_domains()`, `search_layers()` to discover what's available
+2. **Query**: Use `list_layers()` to filter by domain, layer type, or data type
+3. **Retrieve**: Use `get_layer(id, bbox)` to get the actual raster data for your area of interest
+
+All data is streamed efficiently from cloud storage using COG (Cloud Optimized GeoTIFF) format!
