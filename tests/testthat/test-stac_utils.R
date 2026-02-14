@@ -1,46 +1,48 @@
-## These tests are designed for a local STAC catalog by default.
-## To use a remote STAC API, adjust get_stac_catalog_path() and related functions accordingly.
+test_that("query returns a basic layer table", {
+  layers <- list_layers()
 
-test_that("STAC catalog path is correct (local)", {
-  # For remote, replace with a URL and adjust logic in get_stac_catalog_path()
-  expect_true(dir.exists(get_stac_catalog_path()) || file.exists(get_stac_catalog_path()))
+  expect_s3_class(layers, "data.frame")
+  expect_true(nrow(layers) > 0)
+  expect_true(all(c("id", "domain", "layer_type", "data_type", "is_hosted", "href") %in% names(layers)))
 })
 
-test_that("STAC item files can be listed (local)", {
-  # For remote, implement a function to list items from the API
-  files <- list_stac_item_files()
-  expect_type(files, "character")
-  expect_true(all(grepl("\\.json$", files)))
+test_that("query filters hosted layers", {
+  hosted <- list_layers(hosted_only = TRUE)
+
+  expect_s3_class(hosted, "data.frame")
+  expect_true(nrow(hosted) > 0)
+  expect_true(all(hosted$is_hosted))
 })
 
-test_that("STAC items can be loaded (local)", {
-  # For remote, implement a function to load items from the API
-  items <- load_stac_items()
-  expect_type(items, "list")
-  expect_true(length(items) > 0)
-})
+test_that("explore helpers return expected shapes", {
+  domains <- list_domains()
+  layer_types <- list_layer_types()
+  data_types <- list_data_types()
 
-test_that("Domain extraction works", {
-  items <- load_stac_items()
-  domains <- get_domains(items)
   expect_type(domains, "character")
+  expect_type(layer_types, "character")
+  expect_type(data_types, "character")
+  expect_true(length(domains) > 0)
 })
 
-test_that("Layer type extraction works", {
-  items <- load_stac_items()
-  types <- get_layer_types(items)
-  expect_type(types, "character")
+test_that("search_layers can find known IDs by pattern", {
+  layers <- list_layers()
+  known_id <- layers$id[[1]]
+  pattern <- substr(known_id, 1, 4)
+
+  matches <- search_layers(pattern)
+  expect_s3_class(matches, "data.frame")
+  expect_true(known_id %in% matches$id)
 })
 
-test_that("Data type extraction works", {
-  items <- load_stac_items()
-  types <- get_data_types(items)
-  expect_type(types, "character")
-})
-
-test_that("Asset URL extraction works", {
-  items <- load_stac_items()
-  item <- items[[1]]
-  urls <- get_asset_urls(item)
-  expect_type(urls, "character")
+test_that("retrieve validates inputs before attempting download", {
+  expect_error(get_layer(), "Layer 'id' is required")
+  expect_error(
+    get_layer("definitely_not_a_real_layer_id"),
+    "not found in STAC catalog"
+  )
+  expect_error(
+    get_layer(id = "WRI_score", bbox = c(-122, 37, -121)),
+    "'bbox' must be a numeric vector of length 4"
+  )
 })
