@@ -3,7 +3,7 @@ test_that("query returns a basic layer table", {
 
   expect_s3_class(layers, "data.frame")
   expect_true(nrow(layers) > 0)
-  expect_true(all(c("id", "domain", "layer_type", "data_type", "is_hosted", "href") %in% names(layers)))
+  expect_true(all(c("id", "domain", "dimension", "data_type", "is_hosted", "href") %in% names(layers)))
 })
 
 test_that("query filters hosted layers", {
@@ -16,11 +16,11 @@ test_that("query filters hosted layers", {
 
 test_that("explore helpers return expected shapes", {
   domains <- list_domains()
-  layer_types <- list_layer_types()
+  dimensions <- list_dimensions()
   data_types <- list_data_types()
 
   expect_type(domains, "character")
-  expect_type(layer_types, "character")
+  expect_type(dimensions, "character")
   expect_type(data_types, "character")
   expect_true(length(domains) > 0)
 })

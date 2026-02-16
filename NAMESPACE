@@ -3,7 +3,7 @@
 export(catalog_summary)
 export(get_layer)
 export(list_data_types)
+export(list_dimensions)
 export(list_domains)
-export(list_layer_types)
 export(list_layers)
 export(search_layers)

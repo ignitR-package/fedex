@@ -35,8 +35,8 @@ Explore catagories:
 # What domains exist?
 list_domains()
 
-# What layer types are available?
-list_layer_types()
+# What dimensions are available?
+list_dimensions()
 
 # What data types are available?
 list_data_types()
@@ -62,7 +62,7 @@ air_quality <- list_layers(domain = "air_quality")
 print(air_quality)
 
 # Get all resistance indicators across all domains
-resistance <- list_layers(layer_type = "resistance", data_type = "indicator")
+resistance <- list_layers(dimension = "resistance", data_type = "indicator")
 head(resistance)
 
 # See what's currently hosted on KNB
@@ -127,7 +127,7 @@ plot(wri_pnw,
 The `fedex` package provides a simple 3-step workflow:
 
 1. **Explore**: Use `catalog_summary()`, `list_domains()`, `search_layers()` to discover what's available
-2. **Query**: Use `list_layers()` to filter by domain, layer type, or data type
+2. **Query**: Use `list_layers()` to filter by domain, dimension, or data type
 3. **Retrieve**: Use `get_layer(id, bbox)` to get the actual raster data for your area of interest
 
 All data is streamed efficiently from cloud storage using COG (Cloud Optimized GeoTIFF) format!

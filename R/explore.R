@@ -11,16 +11,16 @@ list_domains <- function() {
 }
 
 
-#' List available layer types
+#' List available dimensions
 #'
-#' @returns Character vector of layer type names
+#' @returns Character vector of dimension names
 #' @export
 #'
 #' @examples
-#' list_layer_types()
-list_layer_types <- function() {
+#' list_dimensions()
+list_dimensions <- function() {
   layers <- list_layers()
-  sort(unique(layers$layer_type[!is.na(layers$layer_type)]))
+  sort(unique(layers$dimension[!is.na(layers$dimension)]))
 }
 
 
@@ -75,8 +75,8 @@ catalog_summary <- function() {
   cat("Domains (", length(unique(layers$domain[!is.na(layers$domain)])), "):\n", sep = "")
   cat("  ", paste(sort(unique(layers$domain[!is.na(layers$domain)])), collapse = ", "), "\n\n")
 
-  cat("Layer types (", length(unique(layers$layer_type[!is.na(layers$layer_type)])), "):\n", sep = "")
-  cat("  ", paste(sort(unique(layers$layer_type[!is.na(layers$layer_type)])), collapse = ", "), "\n\n")
+  cat("Dimensions (", length(unique(layers$dimension[!is.na(layers$dimension)])), "):\n", sep = "")
+  cat("  ", paste(sort(unique(layers$dimension[!is.na(layers$dimension)])), collapse = ", "), "\n\n")
 
   cat("Data types (", length(unique(layers$data_type)), "):\n", sep = "")
   cat("  ", paste(sort(unique(layers$data_type)), collapse = ", "), "\n\n")

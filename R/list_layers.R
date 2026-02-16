@@ -1,19 +1,19 @@
 #' List available WRI layers
 #'
 #' Query the STAC catalog to find available layers. Filter by domain,
-#' layer type, data type, or hosting status.
+#' dimension, data type, or hosting status.
 #'
 #' @param domain Character. Filter by WRI domain ("air_quality", "communities",
 #'   "infrastructure", "livelihoods", "sense_of_place", "species", "habitats",
 #'   "water", or "unknown" for overall WRI score). Default NULL (all domains).
-#' @param layer_type Character. Filter by layer type ("resistance", "resilience",
-#'   "recovery", "status", "domain_score"). Default NULL (all types).
+#' @param dimension Character. Filter by dimension ("resistance", "resilience",
+#'   "recovery", "status", "domain_score"). Default NULL (all dimensions).
 #' @param data_type Character. Filter by data type ("indicator", "aggregate",
 #'   "final_score"). Default NULL (all types).
 #' @param hosted_only Logical. If TRUE, return only layers hosted on KNB.
 #'   Default FALSE.
 #'
-#' @returns A data.frame with columns: id, domain, layer_type, data_type, is_hosted, href
+#' @returns A data.frame with columns: id, domain, dimension, data_type, is_hosted, href
 #' @export
 #'
 #' @examples
@@ -24,15 +24,15 @@
 #' list_layers(domain = "air_quality")
 #'
 #' # Find all resistance indicators
-#' list_layers(layer_type = "resistance", data_type = "indicator")
+#' list_layers(dimension = "resistance", data_type = "indicator")
 #'
 #' # Find what's currently hosted on KNB
 #' list_layers(hosted_only = TRUE)
 #'
 #' # Filter by multiple criteria
-#' list_layers(domain = "communities", layer_type = "resistance")
+#' list_layers(domain = "communities", dimension = "resistance")
 list_layers <- function(domain = NULL,
-                        layer_type = NULL,
+                        dimension = NULL,
                         data_type = NULL,
                         hosted_only = FALSE) {
 
@@ -51,7 +51,7 @@ list_layers <- function(domain = NULL,
     data.frame(
       id = item$id,
       domain = if (is.null(props$wri_domain)) NA_character_ else props$wri_domain,
-      layer_type = if (is.null(props$wri_layer_type)) NA_character_ else props$wri_layer_type,
+      dimension = if (is.null(props$wri_dimension)) NA_character_ else props$wri_dimension,
       data_type = if (is.null(props$data_type)) NA_character_ else props$data_type,
       is_hosted = is_hosted,
       href = href,
@@ -67,8 +67,8 @@ list_layers <- function(domain = NULL,
     df <- df[df$domain == domain & !is.na(df$domain), ]
   }
 
-  if (!is.null(layer_type)) {
-    df <- df[df$layer_type == layer_type & !is.na(df$layer_type), ]
+  if (!is.null(dimension)) {
+    df <- df[df$dimension == dimension & !is.na(df$dimension), ]
   }
 
   if (!is.null(data_type)) {

@@ -6,7 +6,7 @@
 \usage{
 list_layers(
   domain = NULL,
-  layer_type = NULL,
+  dimension = NULL,
   data_type = NULL,
   hosted_only = FALSE
 )
@@ -16,8 +16,8 @@ list_layers(
 "infrastructure", "livelihoods", "sense_of_place", "species", "habitats",
 "water", or "unknown" for overall WRI score). Default NULL (all domains).}
 
-\item{layer_type}{Character. Filter by layer type ("resistance", "resilience",
-"recovery", "status", "domain_score"). Default NULL (all types).}
+\item{dimension}{Character. Filter by dimension ("resistance", "resilience",
+"recovery", "status", "domain_score"). Default NULL (all dimensions).}
 
 \item{data_type}{Character. Filter by data type ("indicator", "aggregate",
 "final_score"). Default NULL (all types).}
@@ -26,11 +26,11 @@ list_layers(
 Default FALSE.}
 }
 \value{
-A data.frame with columns: id, domain, layer_type, data_type, is_hosted, href
+A data.frame with columns: id, domain, dimension, data_type, is_hosted, href
 }
 \description{
 Query the STAC catalog to find available layers. Filter by domain,
-layer type, data type, or hosting status.
+dimension, data type, or hosting status.
 }
 \examples{
 # See all available layers
@@ -40,11 +40,11 @@ list_layers()
 list_layers(domain = "air_quality")
 
 # Find all resistance indicators
-list_layers(layer_type = "resistance", data_type = "indicator")
+list_layers(dimension = "resistance", data_type = "indicator")
 
 # Find what's currently hosted on KNB
 list_layers(hosted_only = TRUE)
 
 # Filter by multiple criteria
-list_layers(domain = "communities", layer_type = "resistance")
+list_layers(domain = "communities", dimension = "resistance")
 }
