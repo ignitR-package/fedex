@@ -22,13 +22,6 @@ library(tictoc)
 
 ## Step 1: Explore What's Available
 
-Get an overview of the data catalog:
-
-```{r explore-catalog}
-# Get a summary of the entire catalog
-catalog_summary()
-```
-
 Explore catagories:
 
 ```{r explore-categories}
@@ -42,7 +35,14 @@ list_dimensions()
 list_data_types()
 ```
 
-Search for specific layers:
+Get an overview of the data catalog (aggregated version of the above functions):
+
+```{r explore-catalog}
+# Get a summary of the entire catalog
+catalog_summary()
+```
+
+Search file names for specific layers:
 
 ```{r search-layers}
 # Find all fire-related layers
@@ -76,15 +76,18 @@ print(hosted)
 
 ```{r get-layer-full}
 # Get the entire WRI score layer
-# Warning: This is a large file, so it may take a moment
 tic("Full extent retrieval")
 wri_full <- get_layer("WRI_score")
 toc()
+```
 
+```{r plot-layer-full}
 # Plot it
+tic("Plotting full layer")
 plot(wri_full,
      main = "WRI Score - Full Extent",
      col = hcl.colors(100, "YlOrRd", rev = TRUE))
+toc()
 ```
 
 ### Example 2: Get WRI Score for Northern California (with bbox)
@@ -98,11 +101,15 @@ bbox_norcal <- c(-122, 37, -121, 38)
 tic("Northern California bbox retrieval")
 wri_norcal <- get_layer("WRI_score", bbox = bbox_norcal)
 toc()
+```
 
+```{r plot-layer-bbox}
 # Plot it
+tic("Northern California bbox plotting")
 plot(wri_norcal,
      main = "WRI Score - Northern California",
      col = hcl.colors(100, "YlOrRd", rev = TRUE))
+toc()
 ```
 
 ### Example 3: Get WRI Score for Larger Region
@@ -115,19 +122,21 @@ bbox_pnw <- c(-125, 42, -110, 49)
 tic("Pacific Northwest bbox retrieval")
 wri_pnw <- get_layer("WRI_score", bbox = bbox_pnw)
 toc()
+```
 
+```{r plot-layer-larger}
 # Plot it
+tic("Pacific Northwest bbox plotting")
 plot(wri_pnw,
      main = "WRI Score - Pacific Northwest",
      col = hcl.colors(100, "YlOrRd", rev = TRUE))
+toc()
 ```
 
 ## Summary
 
-The `fedex` package provides a simple 3-step workflow:
+1. **Explore**: `catalog_summary()`, `list_domains()`, `search_layers()` to discover what's available
+2. **Query**: `list_layers()` filters by domain, dimension, or data type
+3. **Retrieve**: `get_layer(id, bbox)` to get the actual raster data for your area of interest
 
-1. **Explore**: Use `catalog_summary()`, `list_domains()`, `search_layers()` to discover what's available
-2. **Query**: Use `list_layers()` to filter by domain, dimension, or data type
-3. **Retrieve**: Use `get_layer(id, bbox)` to get the actual raster data for your area of interest
 
-All data is streamed efficiently from cloud storage using COG (Cloud Optimized GeoTIFF) format!

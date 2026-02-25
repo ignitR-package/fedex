@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# COG Streaming Verification Script
+# COG Streaming Verification Script - adapted from Carlo's example script
 # =============================================================================
 #
 # PURPOSE:
@@ -90,7 +90,7 @@ cat("Dimensions:", ncol(r), "x", nrow(r), "pixels\n")
 cat("CRS: EPSG:", crs(r, describe = TRUE)$code, "\n")
 cat("Resolution:", res(r)[1], "x", res(r)[2], "m\n")
 cat("Extent:", as.vector(ext(r)), "\n")
-cat("Metadata read time:", round(t_metadata, 2), "s", 
+cat("Metadata read time:", round(t_metadata, 2), "s",
     ifelse(t_metadata < 5, "[OK - fast]", "[SLOW - check connection]"), "\n\n")
 
 # =============================================================================
@@ -117,10 +117,10 @@ pct_of_full <- (as.numeric(bytes_read_small) / content_length) * 100
 cat("Subset dimensions:", ncol(subset_small), "x", nrow(subset_small), "pixels\n")
 cat("Cells read:", format(ncell(subset_small), big.mark = ","), "\n")
 cat("Valid cells:", format(sum(!is.na(vals_small)), big.mark = ","), "\n")
-cat("Value range:", round(min(vals_small, na.rm = TRUE), 2), "-", 
+cat("Value range:", round(min(vals_small, na.rm = TRUE), 2), "-",
     round(max(vals_small, na.rm = TRUE), 2), "\n")
 cat("Data size in memory:", round(as.numeric(bytes_read_small) / 1e6, 2), "MB\n")
-cat("Percent of full file:", round(pct_of_full, 3), "%", 
+cat("Percent of full file:", round(pct_of_full, 3), "%",
     ifelse(pct_of_full < 1, "[OK - partial read confirmed]", ""), "\n")
 cat("Read time:", round(t_small, 2), "s\n\n")
 
@@ -162,15 +162,15 @@ for (name in names(windows)) {
   sub <- crop(r, windows[[name]])
   v <- values(sub)
   t_elapsed <- as.numeric(difftime(Sys.time(), t_start, units = "secs"))
-  
+
   scaling_results <- rbind(scaling_results, data.frame(
     window = name,
     pixels = ncell(sub),
     mb_read = as.numeric(object.size(v)) / 1e6,
     seconds = t_elapsed
   ))
-  
-  cat(sprintf("  %s: %s pixels, %.2f MB, %.2f s\n", 
+
+  cat(sprintf("  %s: %s pixels, %.2f MB, %.2f s\n",
               name, format(ncell(sub), big.mark = ","),
               as.numeric(object.size(v)) / 1e6, t_elapsed))
 }
@@ -291,6 +291,6 @@ cat("\nCOG streaming verification:\n")
 cat("  [", ifelse(range_ok, "PASS", "FAIL"), "] Server supports range requests\n")
 cat("  [", ifelse(t_metadata < 5, "PASS", "FAIL"), "] Metadata read is fast (<5s)\n")
 cat("  [", ifelse(pct_of_full < 1, "PASS", "FAIL"), "] Partial reads confirmed (subset << full file)\n")
-cat("  [", ifelse(scaling_results$mb_read[4] > scaling_results$mb_read[1] * 5, "PASS", "FAIL"), 
+cat("  [", ifelse(scaling_results$mb_read[4] > scaling_results$mb_read[1] * 5, "PASS", "FAIL"),
     "] Read size scales with window size\n")
 cat("\nOutputs saved to:", OUTPUT_DIR, "\n")
