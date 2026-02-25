@@ -82,12 +82,12 @@ toc()
 ```
 
 ```{r plot-layer-full}
-# Plot it
-tic("Plotting full layer")
-plot(wri_full,
-     main = "WRI Score - Full Extent",
-     col = hcl.colors(100, "YlOrRd", rev = TRUE))
-toc()
+# Plot it (Takes ~1.5 min)
+#tic("Plotting full layer")
+#plot(wri_full,
+#     main = "WRI Score - Full Extent",
+#     col = hcl.colors(100, "YlOrRd", rev = TRUE))
+#toc()
 ```
 
 ### Example 2: Get WRI Score for Northern California (with bbox)
