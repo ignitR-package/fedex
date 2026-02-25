@@ -24,11 +24,11 @@
     "data_type": "indicator",
     "wri_domain": "iconic_species",
     "wri_dimension": null,
-    "is_hosted": false
+    "is_hosted": true
   },
   "assets": {
     "data": {
-      "href": "../cogs/sense_of_place_iconic_species_traits_recovery.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/sense_of_place_iconic_species_traits_recovery.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"

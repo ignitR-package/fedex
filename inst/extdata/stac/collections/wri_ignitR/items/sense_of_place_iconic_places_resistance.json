@@ -24,11 +24,11 @@
     "data_type": "aggregate",
     "wri_domain": "sense_of_place",
     "wri_dimension": "resistance",
-    "is_hosted": false
+    "is_hosted": true
   },
   "assets": {
     "data": {
-      "href": "../cogs/sense_of_place_iconic_places_resistance.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/sense_of_place_iconic_places_resistance.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"

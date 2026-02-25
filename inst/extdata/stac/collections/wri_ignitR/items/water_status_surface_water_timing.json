@@ -24,11 +24,11 @@
     "data_type": "indicator",
     "wri_domain": "water",
     "wri_dimension": "status",
-    "is_hosted": false
+    "is_hosted": true
   },
   "assets": {
     "data": {
-      "href": "../cogs/water_status_surface_water_timing.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/water_status_surface_water_timing.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"

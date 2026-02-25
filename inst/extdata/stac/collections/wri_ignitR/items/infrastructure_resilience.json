@@ -24,11 +24,11 @@
     "data_type": "aggregate",
     "wri_domain": "infrastructure",
     "wri_dimension": "resilience",
-    "is_hosted": false
+    "is_hosted": true
   },
   "assets": {
     "data": {
-      "href": "../cogs/infrastructure_resilience.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/infrastructure_resilience.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"

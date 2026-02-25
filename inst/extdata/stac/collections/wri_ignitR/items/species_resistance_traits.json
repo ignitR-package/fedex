@@ -24,11 +24,11 @@
     "data_type": "indicator",
     "wri_domain": "species",
     "wri_dimension": "resistance",
-    "is_hosted": false
+    "is_hosted": true
   },
   "assets": {
     "data": {
-      "href": "../cogs/species_resistance_traits.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/species_resistance_traits.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"

@@ -24,11 +24,11 @@
     "data_type": "aggregate",
     "wri_domain": "livelihoods",
     "wri_dimension": "status",
-    "is_hosted": false
+    "is_hosted": true
   },
   "assets": {
     "data": {
-      "href": "../cogs/livelihoods_status.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/livelihoods_status.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"

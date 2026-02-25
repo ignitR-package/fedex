@@ -24,11 +24,11 @@
     "data_type": "aggregate",
     "wri_domain": "water",
     "wri_dimension": "domain_score",
-    "is_hosted": false
+    "is_hosted": true
   },
   "assets": {
     "data": {
-      "href": "../cogs/water_domain_score.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/water_domain_score.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"

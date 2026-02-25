@@ -28,7 +28,7 @@
   },
   "assets": {
     "data": {
-      "href": "https://knb.ecoinformatics.org/data/WRI_score.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/WRI_score.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"

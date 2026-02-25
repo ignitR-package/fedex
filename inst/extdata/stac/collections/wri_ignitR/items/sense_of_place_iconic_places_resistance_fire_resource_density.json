@@ -24,11 +24,11 @@
     "data_type": "indicator",
     "wri_domain": "iconic_places",
     "wri_dimension": "resistance",
-    "is_hosted": false
+    "is_hosted": true
   },
   "assets": {
     "data": {
-      "href": "../cogs/sense_of_place_iconic_places_resistance_fire_resource_density.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/sense_of_place_iconic_places_resistance_fire_resource_density.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"

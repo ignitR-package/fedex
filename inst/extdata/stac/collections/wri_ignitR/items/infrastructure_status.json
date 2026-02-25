@@ -24,11 +24,11 @@
     "data_type": "aggregate",
     "wri_domain": "infrastructure",
     "wri_dimension": "status",
-    "is_hosted": false
+    "is_hosted": true
   },
   "assets": {
     "data": {
-      "href": "../cogs/infrastructure_status.tif",
+      "href": "https://knb.ecoinformatics.org/data/wri-data-processing/cogs/infrastructure_status.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": [
         "data"
