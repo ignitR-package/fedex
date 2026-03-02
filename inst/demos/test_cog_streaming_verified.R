@@ -37,7 +37,7 @@ library(httr)
 # --- CONFIG ---
 COG_URL <- "https://knb.ecoinformatics.org/data/WRI_score.tif"
 VSICURL_PATH <- paste0("/vsicurl/", COG_URL)  # GDAL virtual path for HTTP access
-OUTPUT_DIR <- getwd()
+OUTPUT_DIR <- here::here("inst", "demos", "test_cog_streaming_outputs")
 
 # GDAL environment settings to reduce unnecessary HTTP requests
 # EMPTY_DIR: don't try to list directory contents (no sidecar files to find)
