@@ -1,0 +1,23 @@
+---
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+**Researchers (secondary analysis and method development)**
+
+-   **Who**: Academic or applied researchers.
+
+-   **Want**: Use novel layers directly (not just the final index) to run new analyses, validate predictors, or build new models.
+
+-   **Examples mentioned**: Defensible space layer (predictive of structure loss), and road connectivity metrics (roads in and out of a community).
+
+-   **Key traits**: Wants flexible access to raw layers and the ability to manipulate them for new questions.
+
+**Optimized functionalities**
+
+-   
+
+```{r}
+
+```
