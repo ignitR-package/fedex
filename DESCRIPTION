@@ -1,4 +1,4 @@
-Package: fedex
+Package: firex
 Title: Access Wildfire Resilience Index Data
 Version: 0.0.0.9000
 Authors@R: c(person("Emily", "Miller", , "ermiller@ucsb.edu", role = c("aut", "cre")), person("Ixel", "Medrano", , "imedrano@ucsb.edu", role = "aut"), person("Kaiju", "Morquecho", , "kaimorquecho@ucsb.edu", role = "aut"), person("Hylaea", "Miller", , "hylaea@ucsb.edu", role = "aut"))

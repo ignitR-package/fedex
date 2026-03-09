@@ -92,7 +92,7 @@ load_stac_items <- function() {
 
   # Define stac directory
   stac_dir <- system.file("extdata/stac/collections/wri_ignitR/items",
-                          package = "fedex")
+                          package = "firex")
 
   # Check that it exists
   if (!dir.exists(stac_dir)) {

@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(fedex)
+library(firex)
 
-test_check("fedex")
+test_check("firex")

@@ -1,4 +1,4 @@
-# fedex R Package
+# firex R Package
 
 This package provides utilities for querying a local STAC catalog and retrieving asset information, designed for wildfire resilience data workflows.
 
@@ -17,7 +17,7 @@ This package provides utilities for querying a local STAC catalog and retrieving
 
 ## Example Usage
 ```r
-library(fedex)
+library(firex)
 items <- load_stac_items()
 domains <- get_domains(items)
 asset_urls <- get_asset_urls(items[[1]])
