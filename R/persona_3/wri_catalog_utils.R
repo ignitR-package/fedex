@@ -1,46 +1,43 @@
 # =============================================================================
-# STAC Helper Functions (Internal)
+# STAC Helper Functions (Internal) — devtools::load_all() workflow
 #
-# These functions:
-# - Resolve package and STAC paths
-# - Traverse the STAC structure (catalog -> collections -> items)
-# - Extract and resolve asset paths
-#
-# These are INTERNAL helpers and should not be exported.
+# ASSUMPTIONS:
+# - Dev workflow (not installed) is OK
+# - STAC is link-navigable:
+#     catalog.json -> rel="child" to collection.json
+#     collection.json -> rel="item" to items/*.json
 # =============================================================================
 
-
 # -----------------------------------------------------------------------------
-# GET PACKAGE PATH (INSTALLED OR DEVTOOLS LOAD_ALL)
+# GET PACKAGE PATH (DEV MODE)
 # -----------------------------------------------------------------------------
 
 wri_get_pkg_path <- function() {
 
-  # Case 1: Installed package
-  pkg_path <- system.file(package = "fedex")
-  if (nzchar(pkg_path)) {
-    return(normalizePath(pkg_path))
-  }
-
-  # Case 2: Development mode (devtools::load_all)
-  if (requireNamespace("pkgload", quietly = TRUE)) {
-    dev_path <- tryCatch(
-      pkgload::pkg_path("fedex"),
-      error = function(e) NA_character_
+  if (!requireNamespace("pkgload", quietly = TRUE)) {
+    stop(
+      "Dev mode required: install 'pkgload' and load with devtools::load_all().\n",
+      "Install: install.packages('pkgload')",
+      call. = FALSE
     )
-
-    if (!is.na(dev_path) && nzchar(dev_path)) {
-      return(normalizePath(dev_path))
-    }
   }
 
+  # In a devtools::load_all() session, pkgload knows the current package path.
+  pkg_path <- tryCatch(pkgload::pkg_path(), error = function(e) NA_character_)
+
+  if (!is.na(pkg_path) && nzchar(pkg_path) && dir.exists(pkg_path)) {
+    return(normalizePath(pkg_path, winslash = "/", mustWork = TRUE))
+  }
+
+  # If you sourced this file directly, pkgload may not be initialized; give a clear error.
   stop(
-    "Could not determine package path. ",
-    "Install the package or load it with devtools::load_all().",
+    "Could not determine package path in dev mode.\n\n",
+    "Run this from the package root (folder with DESCRIPTION):\n",
+    "  setwd('~/MEDS/Capstone/firex')\n",
+    "  devtools::load_all()\n",
     call. = FALSE
   )
 }
-
 
 # -----------------------------------------------------------------------------
 # RESOLVE STAC CATALOG PATH
@@ -50,26 +47,30 @@ wri_resolve_stac_path <- function() {
 
   pkg_path <- wri_get_pkg_path()
 
-  project_root <- normalizePath(file.path(pkg_path, ".."))
+  # Expected layout:
+  #   <project_root>/firex/ (pkg_path)
+  #   <project_root>/wri-data-processing/stac/catalog.json
+  project_root <- normalizePath(file.path(pkg_path, ".."), winslash = "/", mustWork = FALSE)
 
-  stac_path <- file.path(
-    project_root,
-    "wri-data-processing",
-    "stac",
-    "catalog.json"
+  stac_path <- normalizePath(
+    file.path(project_root, "wri-data-processing", "stac", "catalog.json"),
+    winslash = "/",
+    mustWork = FALSE
   )
 
   if (!file.exists(stac_path)) {
     stop(
-      "STAC catalog not found at expected location:\n",
-      stac_path,
+      "STAC catalog not found.\n\n",
+      "I looked for:\n  ", stac_path, "\n\n",
+      "Expected layout:\n",
+      "  <project_root>/firex/\n",
+      "  <project_root>/wri-data-processing/stac/catalog.json\n",
       call. = FALSE
     )
   }
 
-  normalizePath(stac_path)
+  stac_path
 }
-
 
 # -----------------------------------------------------------------------------
 # RESOLVE HREF (RELATIVE / ABSOLUTE / URL)
@@ -81,7 +82,7 @@ wri_resolve_href <- function(base_file, href) {
     return(NA_character_)
   }
 
-  # URL (future-proofing for KNB)
+  # URL (future-proofing)
   if (grepl("^[a-zA-Z]+://", href)) {
     return(href)
   }
@@ -91,14 +92,13 @@ wri_resolve_href <- function(base_file, href) {
     return(normalizePath(href, winslash = "/", mustWork = FALSE))
   }
 
-  # Relative path
+  # Relative path (relative to the directory containing base_file)
   normalizePath(
     file.path(dirname(base_file), href),
     winslash = "/",
     mustWork = FALSE
   )
 }
-
 
 # -----------------------------------------------------------------------------
 # FILTER LINKS BY REL TYPE
@@ -119,7 +119,6 @@ wri_links_by_rel <- function(stac_obj, rel) {
 
   links[keep]
 }
-
 
 # -----------------------------------------------------------------------------
 # EXTRACT ASSETS FROM STAC ITEM (TIDY DATA FRAME)
@@ -144,10 +143,7 @@ wri_item_assets_df <- function(item_obj, item_file) {
 
     data.frame(
       asset_name = nm,
-      href = if (!is.null(a$href))
-        wri_resolve_href(item_file, a$href)
-      else
-        NA_character_,
+      href = if (!is.null(a$href)) wri_resolve_href(item_file, a$href) else NA_character_,
       type = if (!is.null(a$type)) a$type else NA_character_,
       roles = I(list(if (!is.null(a$roles)) a$roles else character()))
     )
@@ -155,7 +151,6 @@ wri_item_assets_df <- function(item_obj, item_file) {
 
   do.call(rbind, out)
 }
-
 
 # -----------------------------------------------------------------------------
 # READ ROOT STAC (MINIMAL)
@@ -173,7 +168,6 @@ wri_read_stac_root <- function() {
   stac_path <- wri_resolve_stac_path()
   rstac::read_stac(stac_path)
 }
-
 
 # -----------------------------------------------------------------------------
 # READ FULL STAC TREE (CATALOG -> COLLECTIONS -> ITEMS)
@@ -201,13 +195,13 @@ wri_read_stac_tree <- function() {
     }
 
     obj <- rstac::read_stac(path)
-    set(path, obj, envir = visited)
+    assign(path, obj, envir = visited)  # <-- FIX: assign() not set()
     obj
   }
 
   catalog <- read_file(catalog_path)
 
-  # Catalog children (typically collections)
+  # Catalog children (collections)
   child_links <- wri_links_by_rel(catalog, "child")
   child_paths <- unique(
     vapply(child_links,
@@ -224,11 +218,9 @@ wri_read_stac_tree <- function() {
 
     col <- read_file(cp)
 
-    col_id <- if (!is.null(col$id) && nzchar(col$id))
-      col$id
-    else
-      basename(dirname(cp))
+    col_id <- if (!is.null(col$id) && nzchar(col$id)) col$id else basename(dirname(cp))
 
+    # With your updated collection.json, rel="item" exists and href looks like "items/<id>.json"
     item_links <- c(
       wri_links_by_rel(col, "item"),
       wri_links_by_rel(col, "child")
@@ -240,6 +232,14 @@ wri_read_stac_tree <- function() {
              character(1))
     )
 
+    if (length(item_paths) == 0) {
+      stop(
+        "No items discovered for collection '", col_id, "'.\n",
+        "Expected rel='item' links in:\n  ", cp,
+        call. = FALSE
+      )
+    }
+
     col_item_ids <- character()
 
     for (ip in item_paths) {
@@ -248,6 +248,7 @@ wri_read_stac_tree <- function() {
 
       it <- read_file(ip)
 
+      # Keep only STAC Items
       if (!is.null(it$type) && !identical(it$type, "Feature")) next
 
       it_id <- it$id

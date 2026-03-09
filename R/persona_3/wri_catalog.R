@@ -4,17 +4,22 @@
 
 #' Read the WRI STAC catalog
 #'
-#' Reads the local STAC catalog (fresh by default) and returns a `wri_catalog`
-#' object that can be inspected and used by other package functions.
+#' Reads the local STAC catalog and returns a `wri_catalog` object.
 #'
-#' @param fresh Logical. If TRUE (default), re-reads the STAC from disk each time.
-#'   (Currently, fresh=FALSE is not implemented; the catalog is always rebuilt.)
+#' @param fresh Logical. If TRUE (default), rebuilds the catalog from disk.
+#'   If FALSE, not implemented yet (reserved for caching).
 #'
 #' @return An object of class `wri_catalog`.
 #' @export
 wri_catalog <- function(fresh = TRUE) {
 
-  # fresh currently always behaves as TRUE (local STAC may change frequently)
+  if (!isTRUE(fresh)) {
+    stop(
+      "`fresh = FALSE` is not implemented yet. The catalog is always rebuilt from disk.",
+      call. = FALSE
+    )
+  }
+
   data <- wri_read_stac_tree()
 
   structure(

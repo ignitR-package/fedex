@@ -14,10 +14,135 @@ editor:
 
 -   **Key traits**: Wants flexible access to raw layers and the ability to manipulate them for new questions.
 
-**Optimized functionalities**
-
--   
 
 ```{r}
+# 1) Does it find the STAC catalog.json where we expect?
+wri_resolve_stac_path()
 
+# 2) Can it read the catalog?
+root <- wri_read_stac_root()
+root$type
+root$id
+
+# 3) Can it traverse collections + items?
+tree <- wri_read_stac_tree()
+length(tree$collections)
+length(tree$items)
+
+# 4) Peek one item + assets
+names(tree$items)[1]
+head(tree$items[[1]]$assets)
 ```
+
+```{r}
+# ============================================================
+# demo_wri_catalog_three_files.R
+# Tests:
+#   - wri_catalog_utils.R  (path resolve, read root, read tree, assets)
+#   - wri_catalog.R        (wri_catalog constructor)
+#   - wri_print.R          (print.wri_catalog output + classification)
+# ============================================================
+
+cat("\n============================\n")
+cat("DEMO: WRI CATALOG (3 files)\n")
+cat("============================\n\n")
+
+# ---- 0) Source the three files (use your actual paths) ----
+source("~/MEDS/Capstone/fedex/R/wri_catalog_utils.R")
+source("~/MEDS/Capstone/fedex/R/wri_catalog.R")
+source("~/MEDS/Capstone/fedex/R/wri_print.R")
+
+cat("✓ sourced utils, catalog, print\n\n")
+
+# ---- 1) Basic dependency check ----
+if (!requireNamespace("rstac", quietly = TRUE)) {
+  stop("Missing 'rstac'. Install with install.packages('rstac')", call. = FALSE)
+}
+cat("✓ rstac available\n\n")
+
+# ---- 2) Utils: resolve + read root ----
+cat("1) Resolve STAC path\n")
+stac_path <- wri_resolve_stac_path()
+cat("   STAC:", stac_path, "\n\n")
+
+cat("2) Read STAC root\n")
+root <- wri_read_stac_root()
+cat("   root$type:", root$type, "\n")
+cat("   root$id:  ", root$id, "\n\n")
+
+# ---- 3) Utils: read full tree ----
+cat("3) Read STAC tree (catalog -> collections -> items)\n")
+tree <- wri_read_stac_tree()
+n_col <- length(tree$collections)
+n_it  <- length(tree$items)
+cat("   collections:", n_col, "\n")
+cat("   items:      ", n_it, "\n\n")
+
+stopifnot(n_col >= 1)
+stopifnot(n_it  >= 1)
+
+# Peek first item + assets
+first_id <- names(tree$items)[[1]]
+first_it <- tree$items[[first_id]]
+
+cat("4) Peek first item\n")
+cat("   id:        ", first_id, "\n", sep = "")
+cat("   collection:", first_it$collection, "\n", sep = "")
+cat("   item_path: ", first_it$item_path, "\n", sep = "")
+
+if (!is.data.frame(first_it$assets)) {
+  stop("Expected first_it$assets to be a data.frame", call. = FALSE)
+}
+cat("   assets rows:", nrow(first_it$assets), "\n")
+cat("   assets cols:", ncol(first_it$assets), "\n\n")
+cat("   assets head:\n")
+print(utils::head(first_it$assets, 5))
+cat("\n")
+
+# ---- 4) Catalog constructor: wri_catalog() ----
+cat("5) Build wri_catalog() object (tests wri_catalog.R)\n")
+wcat <- wri_catalog(fresh = TRUE)
+
+cat("   class: ", paste(class(wcat), collapse = ", "), "\n", sep = "")
+cat("   built_at: ", format(wcat$built_at), "\n", sep = "")
+cat("   path: ", wcat$path, "\n\n", sep = "")
+
+stopifnot(inherits(wcat, "wri_catalog"))
+stopifnot(is.list(wcat$data))
+stopifnot(length(wcat$data$items) == n_it)
+
+# ---- 5) Print method: print.wri_catalog() ----
+cat("6) Print catalog (tests wri_print.R)\n\n")
+print(wcat)
+cat("\n")
+
+# ---- 6) Quick domain-prefix sanity check (matches print classifier logic) ----
+cat("7) Sanity check: how many items match known domain_* prefix?\n")
+
+domains_print <- c(
+  "air_quality", "communities", "infrastructure", "livelihoods",
+  "natural_habitats", "sense_of_place", "species", "water"
+)
+
+item_ids <- names(wcat$data$items)
+matches <- vapply(
+  item_ids,
+  function(id) any(startsWith(tolower(id), paste0(domains_print, "_"))),
+  logical(1)
+)
+
+cat("   matching:", sum(matches), "/", length(matches), "\n", sep = "")
+
+if (any(!matches)) {
+  ex <- head(item_ids[!matches], 15)
+  cat("   examples not matching domain_* (up to 15):\n   - ",
+      paste(ex, collapse = "\n   - "),
+      "\n", sep = "")
+  cat("\n   (This is expected if you have ids like 'WRI_score' or domains not listed in print().)\n")
+}
+
+cat("\n============================\n")
+cat("DEMO COMPLETE ✅\n")
+cat("============================\n")
+```
+
