@@ -16,6 +16,7 @@ editor:
 
 
 ```{r}
+
 # 1) Does it find the STAC catalog.json where we expect?
 wri_resolve_stac_path()
 
